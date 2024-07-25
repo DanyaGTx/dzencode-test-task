@@ -3,7 +3,10 @@
     <div class="container">
       <div class="header__wrapper">
         <div class="header__left-part">
-          <div class="header__logo">Inventory</div>
+          <div class="header__logo">
+            <img src="../assets/images/logo.png" alt="logo" width="30" />
+            <span>Inventory</span>
+          </div>
           <div class="header__search">
             <input class="header__input" type="text" placeholder="Поиск" />
           </div>
@@ -13,7 +16,10 @@
             <span class="header__day">Вторник</span>
             <div class="header__date-wrapper">
               <span class="header__full-date"> 23.07.2023 </span>
-              <span class="header__time">18:22</span>
+              <span class="header__time">
+                <BaseIconTime style="fill: var(--base-green)" />
+                <span>18:22</span>
+              </span>
             </div>
           </div>
         </div>
@@ -25,6 +31,7 @@
 <script setup lang="ts"></script>
 
 <style scoped lang="scss">
+@import "../assets/styles/variables";
 .header {
   padding: 10px 0;
   box-shadow: 0px 10px 20px rgba(140, 139, 139, 0.178);
@@ -32,12 +39,37 @@
   position: relative;
   z-index: 1;
 
+  &__logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    & span {
+      text-transform: uppercase;
+      font-size: 14px;
+      color: var(--base-green);
+      font-weight: 500;
+    }
+  }
+
+  &__time {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
   &__wrapper {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 20px;
     width: 100%;
+
+    @media (max-width: 520px) {
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0;
+    }
   }
 
   &__search {

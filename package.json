@@ -15,9 +15,6 @@
     "vue": "latest"
   },
   "devDependencies": {
-    "@bootstrap-vue-next/nuxt": "^0.24.2",
-    "bootstrap": "^5.3.3",
-    "bootstrap-vue-next": "^0.24.2",
     "sass": "^1.77.8"
   }
 }

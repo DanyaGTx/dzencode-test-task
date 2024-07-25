@@ -3,7 +3,7 @@
     <AppHeader />
     <div class="main">
       <AppSidebar />
-      <div class="container py-10">
+      <div class="container">
         <slot />
       </div>
     </div>
@@ -12,11 +12,15 @@
 
 <style lang="scss" scoped>
 .main {
-  display: flex !important;
-  margin-right: 280px;
+  display: flex;
+  width: calc(100% - 200px);
 
   @media (max-width: 650px) {
-    margin-right: 130px;
+    width: calc(100% - 130px) !important;
   }
+}
+
+.container {
+  padding-top: 80px;
 }
 </style>
