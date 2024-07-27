@@ -7,14 +7,7 @@
             <img src="~/assets/images/logo.png" alt="logo" width="30" />
             <span>Inventory</span>
           </div>
-          <div class="header__search">
-            <input
-              v-model="searchModel"
-              class="header__input"
-              type="text"
-              placeholder="Поиск"
-            />
-          </div>
+          <HeaderSearch v-model="searchModel" />
         </div>
         <div class="header__right-part">
           <div class="header__date-info">
@@ -34,8 +27,9 @@
 </template>
 
 <script setup lang="ts">
-import { getDayName, formatTime, formatRealDateWithMonth } from "~/utils";
-const searchModel = defineModel();
+import { getDayName, formatTime, formatRealDateWithMonth } from "~/utils/index";
+
+const searchModel = defineModel<string>();
 
 const currentDay = ref(getDayName(new Date()));
 const currentDate = ref(formatRealDateWithMonth(new Date()));
@@ -100,25 +94,6 @@ onUnmounted(() => {
       flex-direction: column;
       align-items: flex-end;
       gap: 0;
-    }
-  }
-
-  &__search {
-    width: 100%;
-    max-width: 500px;
-  }
-
-  &__input {
-    border-radius: 5px;
-    outline: none;
-    padding: 5px;
-    width: 100%;
-    border: 1px solid rgb(214, 213, 213);
-    background-color: rgb(237, 242, 246);
-
-    &::placeholder {
-      color: black;
-      font-weight: 700;
     }
   }
 

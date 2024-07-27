@@ -23,7 +23,7 @@ const searchFilter = inject("searchFilter", ref(""));
 
 const productsStore = useProductsStore();
 
-const filterByType = ref("All");
+const filterByType = ref("all");
 
 const filteredProducts = computed(() => {
   const searchTerm = searchFilter.value.toLowerCase();
@@ -32,7 +32,7 @@ const filteredProducts = computed(() => {
     product.title.toLowerCase().includes(searchTerm)
   );
 
-  if (filterByType.value === "All") {
+  if (filterByType.value === "all") {
     return products;
   }
 
