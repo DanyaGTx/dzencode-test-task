@@ -5,8 +5,8 @@
     </div>
     <div class="card-body px-0 pb-0">
       <div class="card-content">
-        <h5 class="card__title">
-          Длинное предлинное предлинное название прихода
+        <h5>
+          {{ openedItemInfo.title }}
         </h5>
         <div class="card__add-product">
           <span class="card__add-product_plus">+</span>
@@ -15,19 +15,43 @@
       </div>
 
       <div class="card__inner-orders">
-        <OrderOpenedInnerItem />
+        <OrderOpenedInnerItem
+          v-for="innerProduct in openedItemInfo.products"
+          :innerProduct="innerProduct"
+          @deleteInnerProduct="deleteInnerProduct"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import type { IOrder } from "~/types/index";
+
+export interface Props {
+  openedItemInfo: IOrder;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  openedItemInfo: () => ({} as IOrder),
+});
+
 const emit = defineEmits<{
   closeOpenedOrder: [];
+  deleteInnerProduct: [innerProductId: number, orderId: number];
+  deleteOrder: [orderId: number];
 }>();
 
 const closeOpenedOrder = () => {
   emit("closeOpenedOrder");
+};
+
+const deleteInnerProduct = (innerProductId: number) => {
+  emit("deleteInnerProduct", innerProductId, props.openedItemInfo.id);
+
+  if (!props.openedItemInfo.products.length) {
+    emit("deleteOrder", props.openedItemInfo.id);
+  }
 };
 </script>
 
@@ -86,6 +110,10 @@ const closeOpenedOrder = () => {
     text-align: center;
     border-radius: 50%;
     cursor: pointer;
+  }
+
+  &__inner-orders_empty {
+    text-align: center;
   }
 }
 </style>

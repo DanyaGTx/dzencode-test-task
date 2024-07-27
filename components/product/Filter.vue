@@ -4,16 +4,31 @@
     <select
       class="form-select product__filter-select"
       aria-label="Default select example"
+      v-model="model"
     >
-      <option selected>Выберите тип</option>
-      <option value="1">One</option>
-      <option value="2">Two</option>
-      <option value="3">Three</option>
+      <option selected>All</option>
+      <option v-for="type in types" :key="type.value" :value="type.value">
+        {{ type.label }}
+      </option>
     </select>
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const emit = defineEmits<{
+  onFilterTypeChange: [type: string];
+}>();
+
+export interface Props {
+  types: { value: string; label: string }[];
+}
+
+const model = defineModel();
+
+withDefaults(defineProps<Props>(), {
+  types: () => [],
+});
+</script>
 
 <style scoped lang="scss">
 .product__filter {

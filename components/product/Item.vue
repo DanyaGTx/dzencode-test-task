@@ -1,45 +1,60 @@
 <template>
   <div class="card">
-    <div class="card-body d-flex align-items-center">
+    <div class="card-body d-flex align-items-center justify-content-between">
       <div class="d-flex justify-content-center align-items-center">
-        <span class="card__status-point"></span>
+        <span :class="getPointStatusClassName" class="card__status-point">
+        </span>
         <div class="card__image">
           <img
-            src="https://static.vecteezy.com/system/resources/thumbnails/009/887/131/small_2x/computer-monitor-free-png.png"
-            width="55"
+            :src="product.photo"
+            width="70"
             height="55"
             alt="monitor image"
           />
         </div>
 
-        <div class="card-text card__description">
-          <p class="card__description-text">
-            With supporting text below as a natural lead-in to additional
-            content.
+        <div class="card-text card__title">
+          <p class="card__title-text">
+            {{ product.title }}
           </p>
-          <p class="card__serial-number">SN-12.312412</p>
+          <p class="card__serial-number">{{ product.serialNumber }}</p>
         </div>
       </div>
 
-      <div class="card__status-info first-status">свободен</div>
-
-      <div class="card__date">
-        <p>c 06/04/2017</p>
-        <p>по 06/04/2017</p>
+      <div
+        :class="{
+          'free-status': product.status === 'free',
+          'repairing-status': product.status === 'repairing',
+        }"
+        class="card__status-info"
+      >
+        {{ getProductStatus }}
       </div>
 
-      <p>новый</p>
+      <div class="card__date">
+        <p>c {{ formatDate(product.guarantee.start) }}</p>
+        <p>по {{ formatDate(product.guarantee.end) }}</p>
+      </div>
+
+      <div class="card__state">
+        <p v-if="props.product.isNew">новый</p>
+        <p v-else>Б/У</p>
+      </div>
 
       <div class="card__price">
-        <p class="card__price-foreign">2500$</p>
-        <p class="card__price-native">250 000 UAH</p>
+        <p class="card__price-foreign">{{ getForeignPrice }}</p>
+        <p class="card__price-native">{{ getNativePrice }}</p>
       </div>
 
-      <div class="card__group-name">Длинное предлинное название прихода</div>
+      <div class="card__group-name">{{ product.order_name }}</div>
 
       <div class="card__date">
-        <p class="card__date-small">06/12</p>
-        <p class="card__date-full">06 / Сен / 2017</p>
+        <p class="card__date-small">
+          {{ formatSmallDate(product.date) }}
+        </p>
+        <p class="card__date-full">
+          {{ formatDateWithMonth(product.date) }}
+        </p>
       </div>
 
       <BaseIconDelete class="icon" @click="deleteProduct" />
@@ -48,26 +63,59 @@
 </template>
 
 <script setup lang="ts">
+import {
+  getCurrencySymbol,
+  formatSmallDate,
+  formatDateWithMonth,
+} from "~/utils/index";
+import type { IProduct } from "~/types/index";
+
+export interface Props {
+  product: IProduct;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  product: () => ({} as IProduct),
+});
+
 const emit = defineEmits<{
-  deleteProduct: [];
+  deleteProduct: [product: IProduct];
 }>();
 
 const deleteProduct = () => {
-  emit("deleteProduct");
+  emit("deleteProduct", props.product);
 };
+
+const getNativePrice = computed(() => {
+  return props.product.price[1].value + " " + props.product.price[1].symbol;
+});
+
+const getForeignPrice = computed(() => {
+  const price = props.product.price[0].value;
+  const symbol = getCurrencySymbol(props.product.price[0].symbol);
+  return price + " " + symbol;
+});
+
+const getProductStatus = computed(() => {
+  return props.product.status === "free" ? "свободен" : "В ремонте";
+});
+
+const getPointStatusClassName = computed(() => {
+  return props.product.status === "free" ? "free-point" : "repairing-point";
+});
 </script>
 
 <style lang="scss">
 .card {
   min-width: max-content;
-  margin-bottom: 20px;
 
   &-body {
     width: 100%;
     gap: 20px;
   }
 
-  &__description {
+  &__title {
+    min-width: 530px;
     max-width: 530px;
 
     &-text {
@@ -78,15 +126,9 @@ const deleteProduct = () => {
         max-width: 300px;
       }
     }
-  }
 
-  &__status {
-    &-point {
-      min-width: 10px;
-      min-height: 10px;
-      border-radius: 50%;
-      background-color: rgb(255, 196, 0);
-      margin-right: 20px;
+    @media (max-width: 1500px) {
+      min-width: auto;
     }
   }
 
@@ -100,11 +142,18 @@ const deleteProduct = () => {
   }
 
   &__status-info {
-    color: orange;
+    &.free-status {
+      color: orange;
+    }
+
+    &.repairing-status {
+      color: black;
+    }
   }
 
   &__price {
     margin: 0 30px;
+
     &-foreign {
       font-size: 12px;
       color: gray;

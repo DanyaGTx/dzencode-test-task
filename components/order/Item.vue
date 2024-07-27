@@ -7,9 +7,12 @@
         'pe-6': isOrderOpen,
       }"
     >
-      <div class="d-flex justify-content-center align-items-center">
-        <div v-show="!isOrderOpen" class="card-text card__group-name">
-          Длинное предлинное предлинное название прихода
+      <div
+        v-if="!isOrderOpen"
+        class="d-flex justify-content-center align-items-center card__group"
+      >
+        <div class="card-text card__group-name">
+          {{ order.title }}
         </div>
       </div>
 
@@ -18,54 +21,91 @@
           <BaseIconList />
         </div>
         <div class="card__catalog-info">
-          <p class="card__catalog-info_num">23</p>
-          <span class="card__catalog-info_text">Продукта</span>
+          <p class="card__catalog-info_num">
+            {{ order.products.length }}
+          </p>
+          <span class="card__catalog-info_text">{{
+            declensionOrder(order.products.length)
+          }}</span>
         </div>
       </div>
 
       <div class="card__date">
-        <p class="card__date-small">06/12</p>
-        <p class="card__date-full">06 / Сен / 2017</p>
+        <p class="card__date-small">
+          {{ formatSmallDate(order.date) }}
+        </p>
+        <p class="card__date-full">
+          {{ formatDateWithMonth(order.date) }}
+        </p>
       </div>
 
       <div v-show="!isOrderOpen" class="card__price">
-        <p class="card__price-foreign">2500$</p>
-        <p class="card__price-native">250 000 UAH</p>
+        <p class="card__price-foreign">{{ productsPriceInOrder / 40 }}$</p>
+        <p class="card__price-native">{{ productsPriceInOrder }} UAH</p>
       </div>
 
       <BaseIconDelete v-show="!isOrderOpen" class="icon" @click="deleteOrder" />
     </div>
 
-    <span v-show="isOrderOpen" class="order__card-opened">
+    <span
+      v-show="isOrderOpen && props.order.id === props.openedItemId"
+      class="order__card-opened"
+    >
       <BaseIconArrowRight style="width: 25px; height: 25px; fill: white" />
     </span>
   </div>
 </template>
 
 <script setup lang="ts">
-const openedItemInfo = defineModel("openedItemInfo");
+import { declensionOrder } from "~/utils/orders/index";
+import type { IOrder } from "~/types/index";
+import { useOrdersStore } from "~/stores/orders";
+import { formatSmallDate, formatDateWithMonth } from "~/utils/index";
+
+const ordersStore = useOrdersStore();
+
+export interface Props {
+  order: IOrder;
+  openedItemId: number | null;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  order: () => ({} as IOrder),
+  openedItemId: null,
+});
+
 const isOrderOpen = defineModel("isOrderOpen");
 
 const emit = defineEmits<{
   deleteOrder: [orderId: number];
+  openOrder: [orderInfo: IOrder];
 }>();
 
 const deleteOrder = () => {
-  emit("deleteOrder", 777);
+  emit("deleteOrder", props.order.id);
 };
 
 const openOrder = async () => {
   isOrderOpen.value = true;
-  openedItemInfo.value = { id: 1, name: "Order1", date: new Date() };
+  emit("openOrder", props.order);
 };
+
+const productsPriceInOrder = computed(() => {
+  return ordersStore.calculateProductsPriceInOrder(props.order.id);
+});
 </script>
 
 <style scoped lang="scss">
 .card {
-  &__group-name {
+  &__group {
     max-width: 500px;
-    font-size: 20px;
-    text-decoration: underline gray;
+    width: 100%;
+    justify-content: left !important;
+    &-name {
+      max-width: 700px;
+      font-size: 20px;
+      text-decoration: underline gray;
+    }
 
     @media (max-width: 1280px) {
       max-width: 300px;
