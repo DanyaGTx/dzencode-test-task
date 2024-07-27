@@ -1,33 +1,62 @@
 <template>
-  <div class="card">
+  <div class="card" :class="{ 'border-0': showItemForModal }">
     <div class="card-body d-flex justify-content-between align-items-center">
       <div class="d-flex align-items-center">
-        <span class="card__status-point"></span>
+        <span :class="getPointStatusClassName" class="card__status-point">
+        </span>
         <div class="card__image">
-          <img
-            src="https://static.vecteezy.com/system/resources/thumbnails/009/887/131/small_2x/computer-monitor-free-png.png"
-            width="55"
-            height="55"
-            alt="monitor image"
-          />
+          <img :src="innerProduct.photo" width="70" height="55" alt="image" />
         </div>
 
-        <div class="card-text card__description">
-          <p class="card__description-text">
-            Gigabyte Technology X58-USB3 (Socket 1366) 6 X58-USB3
+        <div class="card-text card__info">
+          <p class="card__title-text">
+            {{ innerProduct.title }}
           </p>
-          <p class="card__serial-number">SN-12.312412</p>
+          <p class="card__serial-number">
+            {{ innerProduct.serialNumber }}
+          </p>
         </div>
       </div>
 
-      <div class="card__status-info first-status">свободен</div>
+      <div v-if="!showItemForModal" class="card__status-info first-status">
+        свободен
+      </div>
 
-      <BaseIconDelete class="icon" />
+      <BaseIconDelete
+        v-if="!showItemForModal"
+        @click="deleteInnerProduct"
+        class="icon"
+      />
     </div>
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import type { IProduct } from "~/types/index";
+
+export interface Props {
+  innerProduct: IProduct;
+  showItemForModal?: boolean;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  innerProduct: () => ({} as IProduct),
+});
+
+const emit = defineEmits<{
+  deleteInnerProduct: [innerProductId: number];
+}>();
+
+const deleteInnerProduct = () => {
+  emit("deleteInnerProduct", props.innerProduct.id);
+};
+
+const getPointStatusClassName = computed(() => {
+  return props.innerProduct.status === "free"
+    ? "free-point"
+    : "repairing-point";
+});
+</script>
 
 <style scoped lang="scss">
 .card {
@@ -41,6 +70,10 @@
     @media (max-width: 768px) {
       max-width: 450px !important;
     }
+  }
+
+  &__info {
+    max-width: 450px;
   }
 }
 </style>

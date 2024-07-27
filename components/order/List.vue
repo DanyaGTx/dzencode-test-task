@@ -1,13 +1,20 @@
 <template>
-  <BaseModal v-model="isDeletionModalOpen" />
-  <div class="orders__wrapper">
+  <BaseModal
+    v-model="isDeletionModalOpen"
+    :targetInfo="openedItemInfo"
+    @deleteItem="deleteOrder"
+    type="order"
+  />
+  <div v-if="props.orders.length" class="orders__wrapper">
     <div class="orders__openers" :class="{ opened: isOrderOpen }">
-      <div v-for="i in 2">
+      <div class="orders__opener" v-for="order in orders" :key="order.id">
         <div class="order-list__items">
           <OrderItem
-            @deleteOrder="deleteOrder"
+            :order="order"
+            @deleteOrder="handleDeleteOrder"
+            @openOrder="openOrder"
             v-model:isOrderOpen="isOrderOpen"
-            v-model:openedItemInfo="openedItemInfo"
+            :openedItemId="openedItemInfo.id"
           />
         </div>
       </div>
@@ -17,24 +24,57 @@
       <OrderOpenedItem
         @closeOpenedOrder="isOrderOpen = false"
         v-show="isOrderOpen"
+        :openedItemInfo="openedItemInfo"
+        @deleteInnerProduct="deleteInnerProduct"
+        @deleteOrder="deleteOrder"
       />
     </div>
   </div>
+  <div v-else class="empty-list">No Orders</div>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
-const openedItemInfo = ref({});
+import type { IOrder } from "~/types/index";
+
+export interface Props {
+  orders: IOrder[];
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  orders: () => [],
+});
+
+const emit = defineEmits<{
+  deleteInnerProduct: [innerProductId: number, orderId: number];
+  deleteOrder: [orderId: number];
+}>();
+
+const openedItemInfo = ref<IOrder>({} as IOrder);
 const isOrderOpen = ref(false);
 const isDeletionModalOpen = ref(false);
 
-const isOrderOpened = computed(() => {
-  return !!Object.entries(openedItemInfo.value).length;
-});
+const openOrder = (orderInfo: IOrder) => {
+  openedItemInfo.value = orderInfo;
+};
+
+const handleDeleteOrder = (orderId: number) => {
+  const findOrderIndex = props.orders.findIndex(
+    (order) => order.id === orderId
+  );
+
+  isDeletionModalOpen.value = true;
+  openedItemInfo.value = props.orders[findOrderIndex];
+};
 
 const deleteOrder = (orderId: number) => {
-  isDeletionModalOpen.value = true;
-  console.log("deleteOrder", orderId);
+  isDeletionModalOpen.value = false;
+  isOrderOpen.value = false;
+  emit("deleteOrder", orderId);
+};
+
+const deleteInnerProduct = (innerProductId: number, orderId: number) => {
+  emit("deleteInnerProduct", innerProductId, orderId);
 };
 </script>
 
@@ -45,7 +85,11 @@ const deleteOrder = (orderId: number) => {
     gap: 20px;
     overflow: auto;
     padding-bottom: 50px;
-    padding-top: 20px;
+    padding: 20px 30px 50px 0;
+  }
+
+  &__opener {
+    margin-bottom: 20px;
   }
 
   &__openers {

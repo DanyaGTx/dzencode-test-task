@@ -4,21 +4,26 @@
       <div class="header__wrapper">
         <div class="header__left-part">
           <div class="header__logo">
-            <img src="../assets/images/logo.png" alt="logo" width="30" />
+            <img src="~/assets/images/logo.png" alt="logo" width="30" />
             <span>Inventory</span>
           </div>
           <div class="header__search">
-            <input class="header__input" type="text" placeholder="Поиск" />
+            <input
+              v-model="searchModel"
+              class="header__input"
+              type="text"
+              placeholder="Поиск"
+            />
           </div>
         </div>
         <div class="header__right-part">
           <div class="header__date-info">
-            <span class="header__day">Вторник</span>
+            <span class="header__day">{{ currentDay }}</span>
             <div class="header__date-wrapper">
-              <span class="header__full-date"> 23.07.2023 </span>
+              <span class="header__full-date">{{ currentDate }}</span>
               <span class="header__time">
                 <BaseIconTime style="fill: var(--base-green)" />
-                <span>18:22</span>
+                <span>{{ currentTime }}</span>
               </span>
             </div>
           </div>
@@ -28,10 +33,36 @@
   </header>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { getDayName, formatTime, formatRealDateWithMonth } from "~/utils";
+const searchModel = defineModel();
+
+const currentDay = ref(getDayName(new Date()));
+const currentDate = ref(formatRealDateWithMonth(new Date()));
+const currentTime = ref(formatTime(new Date()));
+
+const updateDateTime = () => {
+  const now = new Date();
+  currentDay.value = getDayName(now);
+  currentDate.value = formatRealDateWithMonth(now);
+  currentTime.value = formatTime(now);
+};
+
+let intervalId: ReturnType<typeof setInterval>;
+
+onMounted(() => {
+  // Update time immediately
+  updateDateTime();
+  // Update time every minute
+  intervalId = setInterval(updateDateTime, 60000);
+});
+
+onUnmounted(() => {
+  clearInterval(intervalId);
+});
+</script>
 
 <style scoped lang="scss">
-@import "../assets/styles/variables";
 .header {
   padding: 10px 0;
   box-shadow: 0px 10px 20px rgba(140, 139, 139, 0.178);
@@ -105,6 +136,10 @@
     @media (max-width: 650px) {
       gap: 20px;
     }
+  }
+
+  &__full-date {
+    min-width: max-content;
   }
 }
 </style>

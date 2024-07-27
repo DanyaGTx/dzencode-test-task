@@ -1,6 +1,6 @@
 <template>
   <div>
-    <AppHeader />
+    <AppHeader v-model="searchModel" />
     <div class="main">
       <AppSidebar />
       <div class="container">
@@ -9,6 +9,22 @@
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+import { ref } from "vue";
+
+const route = useRoute();
+
+const searchModel = ref("");
+provide("searchFilter", readonly(searchModel));
+
+watch(
+  () => route.path,
+  () => {
+    searchModel.value = "";
+  }
+);
+</script>
 
 <style lang="scss" scoped>
 .main {
