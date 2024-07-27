@@ -13,6 +13,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
+const router = useRouter();
 const route = useRoute();
 
 const searchModel = ref("");

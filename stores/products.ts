@@ -91,6 +91,7 @@ export const useProductsStore = defineStore("products", () => {
   ]);
 
   const productTypes = [
+    { value: "all", label: "All" },
     { value: "keyboard", label: "Keyboards" },
     { value: "monitor", label: "Monitors" },
   ];

@@ -6,7 +6,6 @@
       aria-label="Default select example"
       v-model="model"
     >
-      <option selected>All</option>
       <option v-for="type in types" :key="type.value" :value="type.value">
         {{ type.label }}
       </option>
@@ -15,19 +14,42 @@
 </template>
 
 <script setup lang="ts">
-const emit = defineEmits<{
-  onFilterTypeChange: [type: string];
-}>();
+import { watch } from "vue";
 
 export interface Props {
   types: { value: string; label: string }[];
 }
 
-const model = defineModel();
-
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
   types: () => [],
 });
+
+const router = useRouter();
+const route = useRoute();
+
+const model = defineModel<string>();
+
+const isValidType = (value: string) => {
+  return props.types.some((type) => type.value === value);
+};
+
+watch(model, (value) => {
+  if (value) {
+    router.push({ query: { ...route.query, type: model.value } });
+  }
+});
+
+watch(
+  () => route.query.type,
+  (newType) => {
+    if (isValidType(newType as string)) {
+      model.value = (newType as string) || "";
+    } else {
+      model.value = "all";
+    }
+  },
+  { immediate: true }
+);
 </script>
 
 <style scoped lang="scss">
