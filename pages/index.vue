@@ -11,19 +11,28 @@
         />
       </div>
     </div>
-    <ProductList :products="filteredProducts" @deleteItem="deleteProduct" />
+    <ProductList
+      v-if="!isLoading"
+      :products="filteredProducts"
+      @deleteItem="deleteProduct"
+    />
+    <BaseLoader v-else />
   </div>
 </template>
 
 <script setup lang="ts">
 import { useProductsStore } from "~/stores/products";
 import { ref, inject } from "vue";
+import { useProductsService } from "~/services/products";
+import type { IProduct } from "~/types";
 
 const searchFilter = inject("searchFilter", ref(""));
-
 const productsStore = useProductsStore();
-
 const filterByType = ref("all");
+
+const { getAllProducts } = useProductsService();
+
+const isLoading = ref(true);
 
 const filteredProducts = computed(() => {
   const searchTerm = searchFilter.value.toLowerCase();
@@ -42,6 +51,31 @@ const filteredProducts = computed(() => {
 const deleteProduct = (id: number) => {
   productsStore.deleteProduct(id);
 };
+
+const getProducts = async () => {
+  if (productsStore.products.length) {
+    isLoading.value = false;
+    return;
+  }
+
+  try {
+    const products = (await getAllProducts()) as IProduct[];
+    productsStore.products = products;
+  } catch (err) {
+    if (err instanceof Error) {
+      console.error(err.message);
+    } else {
+      console.error("Unknown error", err);
+    }
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+onMounted(async () => {
+  await nextTick();
+  await getProducts();
+});
 </script>
 
 <style scoped lang="scss">
