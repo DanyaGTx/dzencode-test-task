@@ -20,5 +20,10 @@ export default defineNuxtConfig({
     },
     pageTransition: { name: "page", mode: "out-in" },
   },
+  runtimeConfig: {
+    public: {
+      apiBaseUrl: process.env.API_BASE_URL || "http://localhost:3001",
+    },
+  },
   modules: ["@pinia/nuxt"],
 });
