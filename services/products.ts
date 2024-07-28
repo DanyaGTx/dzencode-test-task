@@ -1,6 +1,5 @@
 export const useProductsService = () => {
-  const config = useRuntimeConfig();
-  const apiBaseUrl = config.public.apiBaseUrl;
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
   const getAllProducts = async () => {
     const { data, error } = await useFetch(`${apiBaseUrl}/api/products/`);

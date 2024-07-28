@@ -3,10 +3,7 @@
     <div class="container">
       <div class="header__wrapper">
         <div class="header__left-part">
-          <div class="header__logo">
-            <img src="~/assets/images/logo.png" alt="logo" width="30" />
-            <span>Inventory</span>
-          </div>
+          <HeaderLogo />
           <HeaderSearch v-model="searchModel" />
         </div>
         <div class="header__right-part">
@@ -17,6 +14,7 @@
               <span class="header__time">
                 <BaseIconTime style="fill: var(--base-green)" />
                 <span>{{ currentTime }}</span>
+                <span>{{ activeTabs }}</span>
               </span>
             </div>
           </div>
@@ -35,6 +33,8 @@ const currentDay = ref(getDayName(new Date()));
 const currentDate = ref(formatRealDateWithMonth(new Date()));
 const currentTime = ref(formatTime(new Date()));
 
+const activeTabs = ref(0);
+
 const updateDateTime = () => {
   const now = new Date();
   currentDay.value = getDayName(now);
@@ -44,7 +44,7 @@ const updateDateTime = () => {
 
 let intervalId: ReturnType<typeof setInterval>;
 
-onMounted(() => {
+onMounted(async () => {
   // Update time immediately
   updateDateTime();
   // Update time every minute
@@ -63,19 +63,6 @@ onUnmounted(() => {
   background-color: white;
   position: relative;
   z-index: 1;
-
-  &__logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-
-    & span {
-      text-transform: uppercase;
-      font-size: 14px;
-      color: var(--base-green);
-      font-weight: 500;
-    }
-  }
 
   &__time {
     display: flex;
