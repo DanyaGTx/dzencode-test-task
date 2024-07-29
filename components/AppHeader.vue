@@ -7,17 +7,7 @@
           <HeaderSearch v-model="searchModel" />
         </div>
         <div class="header__right-part">
-          <div class="header__date-info">
-            <span class="header__day">{{ currentDay }}</span>
-            <div class="header__date-wrapper">
-              <span class="header__full-date">{{ currentDate }}</span>
-              <span class="header__time">
-                <BaseIconTime style="fill: var(--base-green)" />
-                <span>{{ currentTime }}</span>
-                <span>{{ activeTabs }}</span>
-              </span>
-            </div>
-          </div>
+          <HeaderDate />
         </div>
       </div>
     </div>
@@ -25,35 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import { getDayName, formatTime, formatRealDateWithMonth } from "~/utils/index";
-
 const searchModel = defineModel<string>();
-
-const currentDay = ref(getDayName(new Date()));
-const currentDate = ref(formatRealDateWithMonth(new Date()));
-const currentTime = ref(formatTime(new Date()));
-
-const activeTabs = ref(0);
-
-const updateDateTime = () => {
-  const now = new Date();
-  currentDay.value = getDayName(now);
-  currentDate.value = formatRealDateWithMonth(now);
-  currentTime.value = formatTime(now);
-};
-
-let intervalId: ReturnType<typeof setInterval>;
-
-onMounted(async () => {
-  // Update time immediately
-  updateDateTime();
-  // Update time every minute
-  intervalId = setInterval(updateDateTime, 60000);
-});
-
-onUnmounted(() => {
-  clearInterval(intervalId);
-});
 </script>
 
 <style scoped lang="scss">
@@ -63,12 +25,6 @@ onUnmounted(() => {
   background-color: white;
   position: relative;
   z-index: 1;
-
-  &__time {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
 
   &__wrapper {
     display: flex;
@@ -84,11 +40,6 @@ onUnmounted(() => {
     }
   }
 
-  &__date-wrapper {
-    display: flex;
-    gap: 20px;
-  }
-
   &__left-part {
     display: flex;
     align-items: center;
@@ -98,10 +49,6 @@ onUnmounted(() => {
     @media (max-width: 650px) {
       gap: 20px;
     }
-  }
-
-  &__full-date {
-    min-width: max-content;
   }
 }
 </style>
