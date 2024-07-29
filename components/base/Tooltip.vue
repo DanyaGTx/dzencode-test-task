@@ -51,8 +51,33 @@ withDefaults(defineProps<Props>(), {
   border-color: transparent transparent #333 transparent; /* arrow position */
 }
 
+/* Hover state */
 .custom-tooltip:hover .tooltiptext {
   visibility: visible;
   opacity: 1;
 }
+
+@media (max-width: 1500px) {
+  .custom-tooltip .tooltiptext {
+    top: 50%;
+    left: auto;
+    right: 125%;
+    margin-left: 0;
+    margin-right: 10px;
+    transform: translateY(-50%);
+  }
+
+  .custom-tooltip .tooltiptext::after {
+    bottom: auto;
+    top: 50%;
+    left: 100%;
+    transform: translateY(-50%);
+    margin-left: 0;
+    margin-right: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent transparent #333; /* arrow position */
+  }
+}
+
 </style>
