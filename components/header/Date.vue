@@ -6,20 +6,29 @@
       <span class="header__time">
         <BaseIconTime style="fill: var(--base-green)" />
         <span>{{ currentTime }}</span>
-        <span>{{ activeTabs }}</span>
       </span>
+      <div class="header__online">
+        <BaseTooltip msg="Current Online">
+          <div class="header__online-wrapper">
+            <BaseIconUser />
+            <span>{{ activeTabs }}</span>
+          </div>
+        </BaseTooltip>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from "vue";
 import { getDayName, formatTime, formatRealDateWithMonth } from "~/utils/index";
+import socket from "~/sockets/index";
+
+const activeTabs = ref(0);
 
 const currentDay = ref(getDayName(new Date()));
 const currentDate = ref(formatRealDateWithMonth(new Date()));
 const currentTime = ref(formatTime(new Date()));
-
-const activeTabs = ref(0);
 
 const updateDateTime = () => {
   const now = new Date();
@@ -38,15 +47,20 @@ const getMillisecondsUntilNextMinute = computed(() => {
   return millisecondsUntilNextMinute;
 });
 
-onMounted(async () => {
-  // Update time immediately
+const manageRealDate = () => {
   updateDateTime();
-  // Update time every minute
-
   setTimeout(() => {
     updateDateTime();
     intervalId = setInterval(updateDateTime, 60000);
   }, getMillisecondsUntilNextMinute.value);
+};
+
+socket.on("activeTabs", (count: number) => {
+  activeTabs.value = count;
+});
+
+onMounted(async () => {
+  manageRealDate();
 });
 
 onUnmounted(() => {
@@ -69,6 +83,17 @@ onUnmounted(() => {
 
   &__full-date {
     min-width: max-content;
+  }
+
+  &__online {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    &-wrapper {
+      display: flex;
+      align-items: center;
+    }
   }
 }
 </style>
