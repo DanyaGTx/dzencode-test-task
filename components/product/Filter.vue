@@ -58,6 +58,7 @@ watch(
   align-items: center;
   gap: 20px;
   width: 100%;
+
   &-select {
     max-width: 300px;
     box-shadow: none;

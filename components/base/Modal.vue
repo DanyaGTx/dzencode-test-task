@@ -21,13 +21,12 @@
         </div>
         <div class="modal-body">
           <div v-if="type === 'product'" class="modal-content__wrapper">
-            <span class="card__status-point"></span>
+            <span :class="getPointStatusClassName" class="card__status-point" />
             <div>
               <img
+                class="modal-content__image"
                 :src="(targetInfo as IProduct).photo"
                 alt="image"
-                width="40"
-                height="30"
               />
             </div>
             <div class="target__info">
@@ -87,6 +86,12 @@ const props = withDefaults(defineProps<Props>(), {
 const baseModalRef = ref(null);
 const modal = ref<bootstrap.Modal | null>(null);
 
+const getPointStatusClassName = computed(() => {
+  return (props.targetInfo as IProduct).status === "free"
+    ? "free-point"
+    : "repairing-point";
+});
+
 const emit = defineEmits<{
   "update:modelValue": [value: boolean];
   deleteItem: [id: number];
@@ -142,6 +147,10 @@ onMounted(() => {
     display: flex;
     align-items: center;
   }
+
+  &__image {
+    max-width: 80px;
+  }
 }
 
 .modal-footer {
@@ -165,7 +174,7 @@ onMounted(() => {
 
 .target {
   &__info {
-    margin-left: 50px;
+    margin-left: 20px;
 
     @media (max-width: 490px) {
       margin-left: 15px;
@@ -182,4 +191,3 @@ onMounted(() => {
   }
 }
 </style>
-~/types
