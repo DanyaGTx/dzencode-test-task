@@ -1,5 +1,10 @@
 <template>
-  <div class="card" :class="{ 'border-0': showItemForModal }">
+  <div
+    :class="{
+      'border-0': showItemForModal,
+      'border-top': !showItemForModal,
+    }"
+  >
     <div class="card-body d-flex justify-content-between align-items-center">
       <div class="d-flex align-items-center">
         <span :class="getPointStatusClassName" class="card__status-point">

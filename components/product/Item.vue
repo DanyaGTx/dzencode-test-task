@@ -133,7 +133,7 @@ const getPointStatusClassName = computed(() => {
   }
 
   &__image {
-    margin-right: 10px;
+    margin-right: 20px;
   }
 
   &__serial-number {
