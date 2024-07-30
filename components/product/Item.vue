@@ -32,8 +32,8 @@
       </div>
 
       <div class="card__date">
-        <p>c {{ formatDate(product.guarantee.start) }}</p>
-        <p>по {{ formatDate(product.guarantee.end) }}</p>
+        <p>c {{ formatDate(product.guarantee?.start) }}</p>
+        <p>по {{ formatDate(product.guarantee?.end) }}</p>
       </div>
 
       <div class="card__state">
@@ -63,12 +63,14 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
+import { formatDate } from "../../utils/index";
 import {
   getCurrencySymbol,
   formatSmallDate,
   formatDateWithMonth,
-} from "~/utils/index";
-import type { IProduct } from "~/types/index";
+} from "../../utils/index";
+import type { IProduct } from "../../types/index";
 
 export interface Props {
   product: IProduct;

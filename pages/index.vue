@@ -21,8 +21,8 @@
 </template>
 
 <script setup lang="ts">
+import { ref, inject, computed, onMounted, nextTick } from "vue";
 import { useProductsStore } from "~/stores/products";
-import { ref, inject } from "vue";
 import { useProductsService } from "~/services/products";
 import type { IProduct } from "~/types";
 

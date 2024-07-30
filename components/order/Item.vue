@@ -57,6 +57,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
 import { declensionOrder } from "~/utils/orders/index";
 import type { IOrder } from "~/types/index";
 import { useOrdersStore } from "~/stores/orders";
