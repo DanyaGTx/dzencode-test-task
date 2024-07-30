@@ -1,8 +1,10 @@
-# Nuxt 3 Minimal Starter
+# Nuxt 3 Dzen Test Task
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+## Running in Docker
 
-## Setup
+docker compose up --build
+
+## Setup manually
 
 Make sure to install the dependencies:
 
@@ -71,5 +73,3 @@ yarn preview
 # bun
 bun run preview
 ```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
