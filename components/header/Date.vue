@@ -11,7 +11,7 @@
         <BaseTooltip msg="Current Online">
           <div class="header__online-wrapper">
             <BaseIconUser />
-            <span>{{ activeTabs }}</span>
+            <span>{{ connectionStore.online }}</span>
           </div>
         </BaseTooltip>
       </div>
@@ -22,9 +22,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { getDayName, formatTime, formatRealDateWithMonth } from "~/utils/index";
-import socket from "~/sockets/index";
+import { useConnectionStore } from "@/stores/connection";
 
-const activeTabs = ref(0);
+const connectionStore = useConnectionStore();
 
 const currentDay = ref(getDayName(new Date()));
 const currentDate = ref(formatRealDateWithMonth(new Date()));
@@ -55,9 +55,7 @@ const manageRealDate = () => {
   }, getMillisecondsUntilNextMinute.value);
 };
 
-socket.on("activeTabs", (count: number) => {
-  activeTabs.value = count;
-});
+connectionStore.bindEvents();
 
 onMounted(async () => {
   manageRealDate();
