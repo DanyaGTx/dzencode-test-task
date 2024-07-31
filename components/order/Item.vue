@@ -17,7 +17,11 @@
       </div>
 
       <div class="card__catalog">
-        <div @click="openOrder" class="card__catalog-icon">
+        <div
+          @click="openOrder"
+          class="card__catalog-icon"
+          data-test="openOrder"
+        >
           <BaseIconList />
         </div>
         <div class="card__catalog-info">

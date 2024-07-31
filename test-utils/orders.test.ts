@@ -66,4 +66,19 @@ describe("Order page", () => {
     await deleteBtn.trigger("click");
     expect(wrapper.emitted()).toHaveProperty("deleteInnerProduct");
   });
+
+  it("should open order", async () => {
+    const wrapper = mount(OrderItem, {
+      props: {
+        order: mockedOrders[0],
+      },
+      global: {
+        components: {},
+      },
+    });
+
+    const deleteBtn = wrapper.find("[data-test='openOrder']");
+    await deleteBtn.trigger("click");
+    expect(wrapper.emitted()).toHaveProperty("openOrder");
+  });
 });
