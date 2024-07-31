@@ -40,9 +40,9 @@ Follow these steps to get started with Dzeh Test Task.
 2. Navigate to the project directory: `cd dzencode-test-task`
 
 ## Running in Docker
-
+```bash
 docker compose up --build
-
+```
 ## Setup manually
 
 Make sure to install the dependencies:
