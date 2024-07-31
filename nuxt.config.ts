@@ -5,6 +5,9 @@ export default defineNuxtConfig({
   css: ["/assets/styles/main.scss"],
   app: {
     head: {
+      charset: "utf-8",
+      viewport: "width=device-width, initial-scale=1",
+      title: "Dzen Test Task",
       link: [
         {
           rel: "stylesheet",

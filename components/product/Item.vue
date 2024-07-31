@@ -57,7 +57,11 @@
         </p>
       </div>
 
-      <BaseIconDelete class="icon" @click="deleteProduct" />
+      <BaseIconDelete
+        class="icon"
+        data-test="deleteProduct"
+        @click="deleteProduct"
+      />
     </div>
   </div>
 </template>

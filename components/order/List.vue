@@ -22,9 +22,9 @@
 
     <div class="order-list__opened">
       <OrderOpenedItem
-        @closeOpenedOrder="isOrderOpen = false"
         v-show="isOrderOpen"
         :openedItemInfo="openedItemInfo"
+        @closeOpenedOrder="isOrderOpen = false"
         @deleteInnerProduct="deleteInnerProduct"
         @deleteOrder="deleteOrder"
       />

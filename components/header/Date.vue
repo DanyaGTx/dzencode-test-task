@@ -55,8 +55,6 @@ const manageRealDate = () => {
   }, getMillisecondsUntilNextMinute.value);
 };
 
-connectionStore.bindEvents();
-
 onMounted(async () => {
   manageRealDate();
 });

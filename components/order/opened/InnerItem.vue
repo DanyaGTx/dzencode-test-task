@@ -28,6 +28,7 @@
       </div>
 
       <BaseIconDelete
+        data-test="deleteInnerProduct"
         v-if="!showItemForModal"
         @click="deleteInnerProduct"
         class="icon"
@@ -37,6 +38,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
 import type { IProduct } from "~/types/index";
 
 export interface Props {

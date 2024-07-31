@@ -12,11 +12,13 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import { useConnectionStore } from "@/stores/connection";
+const connectionStore = useConnectionStore();
 
-const router = useRouter();
 const route = useRoute();
 
 const searchModel = ref("");
+connectionStore.bindEvents();
 provide("searchFilter", readonly(searchModel));
 
 watch(
