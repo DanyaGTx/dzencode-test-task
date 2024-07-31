@@ -23,6 +23,15 @@ The platform includes a feature that allows sorting products by type.
 
 ![Filter](https://imgur.com/JfxDhNZ.png)
 
+## Technologies
+- Nuxt3 + TS + Vite
+- Pinia
+- Bootstrap
+- Docker
+- Websockets (socket-io)
+- Unit testing
+- ExpressJS for server-side
+
 ## Getting Started
 Follow these steps to get started with Dzeh Test Task.
 
