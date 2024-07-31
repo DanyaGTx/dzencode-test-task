@@ -12,6 +12,7 @@ The Product and Orders platform offers an easy-to-use interface for quickly sear
 ### Real-time Date with Online Status
 **Online Status**: Your current online status is displayed in the top-right corner, updated in real-time via web sockets.
 **Real date**: The platform allows users to see the current real-time date in the corner of the site.
+
 ![Current Online](https://i.imgur.com/zKZ1LYB.png)
 
 ### Beautiful Page Transitions
@@ -19,6 +20,7 @@ The platform features smooth and visually appealing transitions between pages, e
 
 ### Filter
 The platform includes a feature that allows sorting products by type.
+
 ![Filter](https://imgur.com/JfxDhNZ.png)
 
 ## Getting Started
