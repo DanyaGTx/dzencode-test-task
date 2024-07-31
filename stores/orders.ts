@@ -1,10 +1,9 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
 import type { IOrder } from "~/types";
-import { ordersData } from "./preloadedData";
 
 export const useOrdersStore = defineStore("orders", () => {
-  const orders = ref<IOrder[]>(ordersData);
+  const orders = ref<IOrder[]>([]);
 
   const deleteProductInOrder = (orderId: number, productId: number) => {
     const orderIndex = orders.value.findIndex((order) => order.id === orderId);
